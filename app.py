@@ -3,15 +3,22 @@ from flask_cors import CORS
 from rag_chatbot import RAGChatbot
 import os
 from dotenv import load_dotenv
+from ensure_database import ensure_database_exists
 
 # Load environment variables
 load_dotenv()
+
+# Ensure database exists
+ensure_database_exists()
 
 app = Flask(__name__)
 CORS(app)
 
 # Initialize chatbot
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY', 'AIzaSyB7rOwEQeZTS4y_Zhz3sFjRMeoEpcPLQtw')
+GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
+if not GEMINI_API_KEY:
+    raise ValueError("GEMINI_API_KEY environment variable is required")
+
 FLASK_PORT = int(os.getenv('FLASK_PORT', 5000))
 FLASK_DEBUG = os.getenv('FLASK_DEBUG', 'True').lower() == 'true'
 
